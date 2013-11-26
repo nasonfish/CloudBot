@@ -32,8 +32,13 @@ def ping(inp, reply=None):
     # host = re.sub(r'([^\s\w\.])+', '', host)
 
     reply("Attempting to ping {} {} times...".format(host, count))
-
-    pingcmd = subprocess.check_output(["ping", "-c", count, host])
+    try:
+        pingcmd = subprocess.check_output(["ping", "-c", count, host])
+    except subprocess.CalledProcessError:
+        try:
+            pingcmd = subprocess.check_output(['ping6', '-c', count, host])
+        except subprocess.CalledProcessError as e:
+            return e
     if "request timed out" in pingcmd or "unknown host" in pingcmd:
         return "error: could not ping host"
     else:
