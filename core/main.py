@@ -151,6 +151,8 @@ def match_command(command):
 def main(conn, out):
     inp = Input(conn, *out)
     command_prefix = conn.conf.get('command_prefix', '.')
+    bot_prefix = conn.conf.get('bot_command_prefix', '[^\w]+: ' + command_prefix) # regex matching "nickname: "
+    bot_name = conn.conf.get('bot_command_relay_name', 'Refract')
 
     # EVENTS
     for func, args in bot.events[inp.command] + bot.events['*']:
@@ -160,6 +162,8 @@ def main(conn, out):
         # COMMANDS
         if inp.chan == inp.nick:  # private message, no command prefix
             prefix = '^(?:[{}]?|'.format(command_prefix)
+        elif inp.nick == bot_name:
+            prefix = '^(?:{}[{}]|'.format(bot_prefix, command_prefix)  # regex matching "name: <prefix>" then the command comes next
         else:
             prefix = '^(?:[{}]|'.format(command_prefix)
 
