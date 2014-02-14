@@ -2,6 +2,8 @@
 
 from util import hook, http, text
 
+import re
+
 db_ready = False
 
 
@@ -14,8 +16,14 @@ def db_init(db):
         db_ready = True
 
 
+def reply_split(text, reply=None, message=None):
+    messages = re.match(r'(.{380,404}[!?.:;,]|.{,404})( (.+))?', text)
+    reply(messages.group(1))
+    if messages.group(3):
+        message(messages.group(3))
+
 @hook.command(autohelp=False)
-def horoscope(inp, db=None, notice=None, nick=None):
+def horoscope(inp, db=None, notice=None, nick=None, reply=None, message=None):
     """horoscope <sign> -- Get your horoscope."""
     db_init(db)
 
@@ -53,4 +61,4 @@ def horoscope(inp, db=None, notice=None, nick=None):
                     (nick.lower(), sign))
         db.commit()
 
-    return result
+    reply_split(result, reply, message)
