@@ -1,12 +1,13 @@
 from util import hook
 
 
-def mode_cmd(mode, text, inp, chan, conn, notice):
+def mode_cmd(mode, text, inp, chan, conn, notice, nick=""):
     """ generic mode setting function """
     split = inp.split(" ")
     if split[0].startswith("#"):
         channel = split[0]
         target = split[1]
+        conn.send("PRIVMSG #my_channel :~{} is attempting to {} {} in {}".format(nick, text, target, channel))
         notice("Attempting to {} {} in {}...".format(text, target, channel))
         conn.send("MODE {} {} {}".format(channel, mode, target))
     else:
@@ -30,67 +31,67 @@ def mode_cmd_no_target(mode, text, inp, chan, conn, notice):
 
 
 @hook.command(permissions=["op_ban", "op"])
-def ban(inp, conn=None, chan=None, notice=None):
+def ban(inp, conn=None, chan=None, notice=None, nick=None):
     """ban [channel] <user> -- Makes the bot ban <user> in [channel].
     If [channel] is blank the bot will ban <user> in
     the channel the command was used in."""
-    mode_cmd("+b", "ban", inp, chan, conn, notice)
+    mode_cmd("+b", "ban", inp, chan, conn, notice, nick)
 
 
 @hook.command(permissions=["op_ban", "op"])
-def unban(inp, conn=None, chan=None, notice=None):
+def unban(inp, conn=None, chan=None, notice=None, nick=None):
     """unban [channel] <user> -- Makes the bot unban <user> in [channel].
     If [channel] is blank the bot will unban <user> in
     the channel the command was used in."""
-    mode_cmd("-b", "unban", inp, chan, conn, notice)
+    mode_cmd("-b", "unban", inp, chan, conn, notice, nick)
 
 
 @hook.command(permissions=["op_quiet", "op"])
-def quiet(inp, conn=None, chan=None, notice=None):
+def quiet(inp, conn=None, chan=None, notice=None, nick=None):
     """quiet [channel] <user> -- Makes the bot quiet <user> in [channel].
     If [channel] is blank the bot will quiet <user> in
     the channel the command was used in."""
-    mode_cmd("+q", "quiet", inp, chan, conn, notice)
+    mode_cmd("+q", "quiet", inp, chan, conn, notice, nick)
 
 
 @hook.command(permissions=["op_quiet", "op"])
-def unquiet(inp, conn=None, chan=None, notice=None):
+def unquiet(inp, conn=None, chan=None, notice=None, nick=None):
     """unquiet [channel] <user> -- Makes the bot unquiet <user> in [channel].
     If [channel] is blank the bot will unquiet <user> in
     the channel the command was used in."""
-    mode_cmd("-q", "unquiet", inp, chan, conn, notice)
+    mode_cmd("-q", "unquiet", inp, chan, conn, notice, nick)
 
 
 @hook.command(permissions=["op_voice", "op"])
-def voice(inp, conn=None, chan=None, notice=None):
+def voice(inp, conn=None, chan=None, notice=None, nick=None):
     """voice [channel] <user> -- Makes the bot voice <user> in [channel].
     If [channel] is blank the bot will voice <user> in
     the channel the command was used in."""
-    mode_cmd("+v", "voice", inp, chan, conn, notice)
+    mode_cmd("+v", "voice", inp, chan, conn, notice, nick)
 
 
 @hook.command(permissions=["op_voice", "op"])
-def devoice(inp, conn=None, chan=None, notice=None):
+def devoice(inp, conn=None, chan=None, notice=None, nick=None):
     """devoice [channel] <user> -- Makes the bot devoice <user> in [channel].
     If [channel] is blank the bot will devoice <user> in
     the channel the command was used in."""
-    mode_cmd("-v", "devoice", inp, chan, conn, notice)
+    mode_cmd("-v", "devoice", inp, chan, conn, notice, nick)
 
 
 @hook.command(permissions=["op_op", "op"])
-def op(inp, conn=None, chan=None, notice=None):
+def op(inp, conn=None, chan=None, notice=None, nick=None):
     """op [channel] <user> -- Makes the bot op <user> in [channel].
     If [channel] is blank the bot will op <user> in
     the channel the command was used in."""
-    mode_cmd("+o", "op", inp, chan, conn, notice)
+    mode_cmd("+o", "op", inp, chan, conn, notice, nick)
 
 
 @hook.command(permissions=["op_op", "op"])
-def deop(inp, conn=None, chan=None, notice=None):
+def deop(inp, conn=None, chan=None, notice=None, nick=None):
     """deop [channel] <user> -- Makes the bot deop <user> in [channel].
     If [channel] is blank the bot will deop <user> in
     the channel the command was used in."""
-    mode_cmd("-o", "deop", inp, chan, conn, notice)
+    mode_cmd("-o", "deop", inp, chan, conn, notice, nick)
 
 
 @hook.command(permissions=["op_topic", "op"])
