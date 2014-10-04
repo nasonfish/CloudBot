@@ -1,6 +1,6 @@
 from cloudbot import hook
 from cloudbot.util import http, web
-
+from plugins.shorten import isgd
 base_url = "http://api.wunderground.com/api/{}/{}/q/{}.json"
 
 
@@ -86,7 +86,7 @@ def weather(text, reply, db, nick, bot, notice):
         "tomorrow_high_c": forecast_tomorrow['high']['celsius'],
         "tomorrow_low_f": forecast_tomorrow['low']['fahrenheit'],
         "tomorrow_low_c": forecast_tomorrow['low']['celsius'],
-        "url": web.isgd(response["current_observation"]['forecast_url'] + "?apiref=e535207ff4757b18")
+        "url": isgd(response["current_observation"]['forecast_url'] + "?apiref=e535207ff4757b18")
     }
 
     reply("{place} - \x02Current:\x02 {conditions}, {temp_f}F/{temp_c}C, {humidity}, "
